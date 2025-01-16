@@ -2,7 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Landmark, LayoutGrid, ReceiptIndianRupee, ShieldCheck } from 'lucide-react'
-import { UserButton } from '@clerk/nextjs'
+import { SignOutButton, UserButton } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import Link from 'next/link'
@@ -31,7 +31,7 @@ function SideNav() {
 
       <div className='mt-5'>
         {PageList.map((page , index)=>(
-          <Link href={page.path}>
+          <Link key={index} href={page.path} >
               <h2 className={`flex items-center gap-2 text-gray-500 font-medium mb-2 p-5 cursor-pointer rounded-md
                 hover:bg-black hover:text-cyan-50
                 ${path==page.path&& 'text-cyan-50 bg-black'}`
@@ -39,14 +39,14 @@ function SideNav() {
                   <page.icon/>
                   {page.name}
               </h2>
-              </Link>
+           </Link>
         ))}
       </div>
-
-      <div className='fixed bottom-10 p-5 flex gap-3 items-center text-lg'>
-        <UserButton/>
-        Profile
-      </div>
+      
+        <div className=' fixed bottom-10 w-56 mt-5 p-5 items-center text-lg rounded-md 
+        hover:bg-black hover:text-red-500'>
+          <SignOutButton/>
+        </div> 
     </div>
   )
 }
