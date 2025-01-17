@@ -33,8 +33,8 @@ function SideNav() {
         {PageList.map((page , index)=>(
           <Link key={index} href={page.path} >
               <h2 className={`flex items-center gap-2 text-gray-500 font-medium mb-2 p-5 cursor-pointer rounded-md
-                hover:bg-black hover:text-cyan-50
-                ${path==page.path&& 'text-cyan-50 bg-black'}`
+                hover:bg-black hover:text-white
+                ${path==page.path&& 'bg-black text-white'}`
                 }>
                   <page.icon/>
                   {page.name}
