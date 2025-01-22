@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import Image from 'next/image'
-import { Landmark, LayoutGrid, ReceiptIndianRupee, ShieldCheck } from 'lucide-react'
+import { Landmark, LayoutGrid, ReceiptIndianRupee, ShieldCheck, LogOut} from 'lucide-react'
 import { SignOutButton, UserButton } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
@@ -43,8 +43,9 @@ function SideNav() {
         ))}
       </div>
       
-        <div className=' fixed bottom-10 w-56 mt-5 p-5 items-center text-lg rounded-md 
+        <div className='flex gap-2 fixed bottom-10 w-56 mt-5 p-5 items-center text-lg rounded-md 
         hover:bg-black hover:text-red-500'>
+          <LogOut />
           <SignOutButton/>
         </div> 
     </div>

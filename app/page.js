@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Divide } from "lucide-react";
+//import { Button } from "@/components/ui/button";
+//import { Divide } from "lucide-react";
 import Image from "next/image";
 import Header from "./_components/Header";
 import Hero from "./_components/Hero";
