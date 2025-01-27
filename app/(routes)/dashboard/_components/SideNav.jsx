@@ -11,7 +11,7 @@ function SideNav() {
     const PageList =[
     {id:1,name:"Dashboard",icon:LayoutGrid, path:"/dashboard"},
     {id:2,name:"Budgets",icon:Landmark, path:"/dashboard/budgets"},
-    {id:3,name:"Expenses",icon:ReceiptIndianRupee, path:"/dashboard/expenses"},
+    {id:3,name:"Expenses",icon:ReceiptIndianRupee, path:"/dashboard/expenses/"},
     {id:4,name:"Upgrade",icon:ShieldCheck, path:"/dashboard/upgrade"},
     ]
 
@@ -30,17 +30,24 @@ function SideNav() {
                   />
 
       <div className='mt-5'>
-        {PageList.map((page , index)=>(
-          <Link key={index} href={page.path} >
-              <h2 className={`flex items-center gap-2 text-gray-500 font-medium mb-2 p-5 cursor-pointer rounded-md
-                hover:bg-black hover:text-white
-                ${path==page.path&& 'bg-black text-white'}`
-                }>
-                  <page.icon/>
-                  {page.name}
-              </h2>
-           </Link>
-        ))}
+        {PageList.map((page)=>{
+          
+          const isActive =
+          page.path === "/dashboard/expenses/"
+            ? path?.startsWith("/dashboard/expenses/") // Matches any dynamic path under "/dashboard/expenses/"
+            : path == page.path; // Exact match for other paths
+
+            return(
+              <Link key={page.id} href={page.path} >
+                <h2 className={`flex items-center gap-2 text-gray-500 font-medium mb-2 p-5 cursor-pointer rounded-md
+                  hover:bg-black hover:text-white
+                  ${isActive && 'bg-black text-white'}`}>
+                    <page.icon/>
+                    {page.name}
+                </h2>
+            </Link>
+            )
+      })}
       </div>
       
         <div className='flex gap-2 fixed bottom-10 w-56 mt-5 p-5 items-center text-lg rounded-md 
