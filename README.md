@@ -19,7 +19,7 @@ The **Expense Tracker** is a simple application designed to help users manage th
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/expense-tracker.git
+   git clone https://github.com/ggritvik/expense-tracker.git
    ```
 
 2. Navigate to the project directory:
