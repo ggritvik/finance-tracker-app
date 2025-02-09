@@ -7,8 +7,24 @@ import { Budgets, Expenses } from "../../../../../utils/schema";
 import { getTableColumns, sql, eq, desc } from "drizzle-orm";
 import BudgetItem from "../../budgets/_components/BudgetItem";
 import AddExpense from "../_components/AddExpense";
+import EditBudget from "../_components/EditBudget";
 import ExpenseListTable from "../_components/ExpenseListTable";
-import { get } from "http";
+import { Button } from "../../../../../components/ui/button";
+import { PenBox, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../../components/ui/alert-dialog";
+import { toast } from "sonner";
 
 function ExpenseScreen({ params }) {
   //const {budgetId} = await params;
@@ -18,14 +34,12 @@ function ExpenseScreen({ params }) {
   const [budgetInfo, setBudgetInfo] = useState([]);
   const [expenseList, setExpenseList] = useState([]);
 
+  const router = useRouter();
+
   useEffect(() => {
     user && getBudgetInfo();
     getExpenseList();
   }, [user]);
-
-  // useEffect(() => {
-  //   getExpenseList();
-  // }, []);
 
   const getBudgetInfo = async () => {
     const result = await db
@@ -44,6 +58,22 @@ function ExpenseScreen({ params }) {
     getExpenseList();
   };
 
+  const deleteBudget = async (id) => {
+    const Expensedeleteresult = await db
+      .delete(Expenses)
+      .where(eq(Expenses.budgetId, id))
+      .returning({ InsertedId: Expenses.id });
+
+    if (Expensedeleteresult) {
+      const result = await db
+        .delete(Budgets)
+        .where(eq(Budgets.id, id))
+        .returning({ InsertedId: Budgets.id });
+    }
+    toast("Budget Deleted Successfully !");
+    router.replace("/dashboard/budgets");
+  };
+
   const getExpenseList = async () => {
     const result = await db
       .select()
@@ -56,7 +86,44 @@ function ExpenseScreen({ params }) {
 
   return (
     <div className="p-10">
-      <h2 className="text-3xl font-bold">My Expenses</h2>
+      <h2 className="text-3xl font-bold flex justify-between items-center ">
+        My Expenses
+        <span>
+          <div className="flex gap-2 items-center">
+            <EditBudget
+              budgetInfo={budgetInfo}
+              refreshData={()=>getBudgetInfo()}
+            />
+
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button className="flex gap-2" variant="destructive">
+                  <Trash /> Delete{" "}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your Budget and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      deleteBudget(id);
+                    }}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </span>
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
         {budgetInfo ? (

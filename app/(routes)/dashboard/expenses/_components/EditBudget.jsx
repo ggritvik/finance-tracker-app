@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
-import EmojiPicker from "emoji-picker-react";
 import { Button } from "../../../../../components/ui/button";
-import { useState } from "react";
+import { PenBox } from "lucide-react";
 import { Input } from "../../../../../components/ui/input";
+import EmojiPicker from "emoji-picker-react";
+import { useState, useEffect } from "react";
+import { db } from "../../../../../utils/dbConfig";
 import { Budgets } from "../../../../../utils/schema";
-import { useUser } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -18,35 +21,32 @@ import {
   DialogTrigger,
 } from "../../../../../components/ui/dialog";
 
-import { db } from "../../../../../utils/dbConfig";
-//import { toast, useToast } from '../../../../../components/hooks/use-toast';
-
-import { toast } from "sonner";
-
-function CreateBudget({ refreshData }) {
-  const [emojiIcon, setEmojiIcon] = useState("😀");
+function EditBudget({ budgetInfo, refreshData}) {
+  const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
   const [name, setName] = useState();
   const [amount, setAmount] = useState();
 
-  const { user } = useUser();
+  useEffect(() => {
+    if (budgetInfo) {
+      setEmojiIcon(budgetInfo?.icon);
+      setAmount(budgetInfo.amount);
+      setName(budgetInfo.name);
+    }
+  }, [budgetInfo]);
 
-  //const { toast } = useToast();
-  const onCreateBudget = async () => {
+  const onUpdateBudget = async () => {
     const result = await db
-      .insert(Budgets)
-      .values({
-        name: name,
-        amount: amount,
-        createdBy: user?.primaryEmailAddress?.emailAddress,
-        icon: emojiIcon,
-      })
-      .returning({ InsertedId: Budgets.id });
+      .update(Budgets)
+      .set({ name: name, amount: amount, icon: emojiIcon })
+      .where(eq(Budgets.id, budgetInfo?.id))
+      .returning();
 
     if (result) {
-      refreshData();
-      toast("Budget Created Successfully");
+      refreshData()
+      toast("Budget Updated Successfully");
+
     }
   };
 
@@ -54,14 +54,14 @@ function CreateBudget({ refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <div className="bg-slate-50 p-10 rounded-md items-center flex flex-col border-dashed border-2 cursor-pointer hover:shadow-md">
-            <h2 className="text-4xl">+</h2>
-            <h2 className="text-2xl font-bold">Create New Budget</h2>
-          </div>
+          <Button className="flex gap-2">
+            <PenBox />
+            Edit
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Budget</DialogTitle>
+            <DialogTitle>Update Budget</DialogTitle>
             <DialogDescription>
               <div className="mt-5">
                 <Button
@@ -85,6 +85,7 @@ function CreateBudget({ refreshData }) {
                   <Input
                     type="text"
                     placeholder="e.g. Home Decor"
+                    defaultValue={budgetInfo?.name}
                     onChange={(e) => setName(e.target.value)}
                   />
 
@@ -92,6 +93,7 @@ function CreateBudget({ refreshData }) {
                   <Input
                     type="number"
                     placeholder="e.g. 5000 $"
+                    defaultValue={budgetInfo?.amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
@@ -102,10 +104,10 @@ function CreateBudget({ refreshData }) {
             <DialogClose asChild>
               <Button
                 disabled={name && amount ? false : true}
-                onClick={() => onCreateBudget()}
+                onClick={() => onUpdateBudget()}
                 className="mt-2 w-full"
               >
-                Create Budget
+                Update Budget
               </Button>
             </DialogClose>
           </DialogFooter>
@@ -115,4 +117,4 @@ function CreateBudget({ refreshData }) {
   );
 }
 
-export default CreateBudget;
+export default EditBudget;
