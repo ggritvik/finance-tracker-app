@@ -2,6 +2,7 @@
 
 ## Overview
 The **Expense Tracker** is a simple application designed to help users manage their finances by tracking their income, expenses, and budgets. This project is a work-in-progress and aims to provide a user-friendly interface for personal financial management.
+
 Link: https://finance-tracker-app-navy.vercel.app/
 
 ## Features
