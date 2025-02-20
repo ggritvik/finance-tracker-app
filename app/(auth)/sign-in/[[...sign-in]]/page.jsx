@@ -71,7 +71,7 @@ export default function Page() {
           </p>
         </div>
 
-        <SignIn />
+        <SignIn redirectUrl={process.env.NEXT_PUBLIC_REDIRECT_AFTER_LOGIN || "/dashboard"}/>
       </div>
     </main>
   </div>
