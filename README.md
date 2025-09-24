@@ -12,8 +12,8 @@ Link: https://finance-tracker-app-navy.vercel.app/
 - Profile management with user authentication.
 
 ## Technology Stack
-- **Frontend:** React, Tailwind CSS
-- **Backend:** Node.js, Express
+- **Frontend:** Next.js , Tailwind CSS
+- **Backend:** Next.js
 - **Database:** Postgres
 - **Authentication:** Clerk
 - **Icons:** Lucide Icons
